@@ -8,6 +8,8 @@
 #include <Geode/modify/CCLabelBMFont.hpp>
 #include <Geode/modify/CCSprite.hpp>
 #include <Geode/modify/CCTextureCache.hpp>
+#include <Geode/modify/CCSpriteBatchNode.hpp>
+#include <Geode/modify/AppDelegate.hpp>
 
 #include <chrono>
 #include <unordered_map>
@@ -177,6 +179,36 @@ class $modify(OptimizedShaderLayer, ShaderLayer) {
     void setupShader(bool shouldReset) {
         if (!shouldReset && this->m_shader) return; 
         ShaderLayer::setupShader(shouldReset);
+    }
+};
+
+// ==========================================
+// BATCH NODE PREALLOCATION (MEMORY ANTI-FRAG)
+// ==========================================
+class $modify(OptimizedBatchNode, CCSpriteBatchNode) {
+    bool initWithTexture(cocos2d::CCTexture2D* tex, unsigned int capacity) {
+        // Force higher initial capacity to prevent O(N) memory reallocations during level load
+        unsigned int optimizedCapacity = (capacity < 1000) ? 1000 : capacity;
+        return CCSpriteBatchNode::initWithTexture(tex, optimizedCapacity);
+    }
+};
+
+// ==========================================
+// BACKGROUND THROTTLING (RESOURCE SAVER)
+// ==========================================
+class $modify(OptimizedApp, AppDelegate) {
+    void applicationDidEnterBackground() {
+        AppDelegate::applicationDidEnterBackground();
+        // Drop FPS to 5 to save CPU/GPU when the game is minimized (Alt-Tab)
+        cocos2d::CCDirector::sharedDirector()->setAnimationInterval(1.0f / 5.0f);
+    }
+
+    void applicationWillEnterForeground() {
+        AppDelegate::applicationWillEnterForeground();
+        // Restore target FPS when the game is focused again
+        auto gm = GameManager::sharedState();
+        float targetFPS = gm->m_customFPSTarget == 0 ? 60.0f : gm->m_customFPSTarget;
+        cocos2d::CCDirector::sharedDirector()->setAnimationInterval(1.0f / targetFPS);
     }
 };
 
