@@ -1,6 +1,6 @@
 # Benchmark comparison
 
-Level: 133260800 — Orbit Auto Deco
+Level: 133260800 - Orbit Auto Deco
 Settings: 144 FPS lock, Frame Extrapolation On (MegaHack), ~167/255 mods active, No V-Sync On
 
 ## System
@@ -43,3 +43,5 @@ Settings: 144 FPS lock, Frame Extrapolation On (MegaHack), ~167/255 mods active,
 ![Frametime over time](bench_images/frametime_timeseries.png)
 
 ![Frametime distribution](bench_images/frametime_histogram.png)
+
+(Benchmark was made via CapFrameX v1.8.6: `https://www.capframex.com/`)
