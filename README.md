@@ -9,6 +9,8 @@ Helium is a high-performance core utility for Geometry Dash that (tries to) elim
 * **State-Change Optimization:** Prevents the CPU from recalculating math for objects, labels, and shaders that haven't changed.
 * **Hyper-Boot:** Unlocks the engine framerate during startup and defers VRAM cleanup until the menu is reached.
 * **Hardware Priority:** Configures the Windows scheduler to prioritize the game process for maximum resource access.
+* **Memory Anti-Fragmentation:** Forces high initial capacity for batch nodes to prevent lag spikes during level loading.
+* **Background Throttling:** Automatically drops the game's framerate when minimized (Alt-Tab) to conserve host machine resources.
 
 ## Technical Improvements
 * **Memory:** Massive reduction in heap allocations during UI rendering.
