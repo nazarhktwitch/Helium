@@ -51,6 +51,7 @@ static bool isNodeVisibleOnscreen(cocos2d::CCNode* node) {
 // ALLOCATION-FREE STRING FORMATTING
 // ==========================================
 bool fastFormatHook(cocos2d::CCString *self, const char *format, va_list ap) {
+#ifdef GEODE_IS_WINDOWS
   thread_local char stackBuffer[4096];
 
   va_list ap_copy;
@@ -68,6 +69,9 @@ bool fastFormatHook(cocos2d::CCString *self, const char *format, va_list ap) {
   str.resize(len);
   self->m_sString = str;
   return true;
+#else
+  return false;
+#endif
 }
 
 $execute {
@@ -178,7 +182,9 @@ class $modify(FastBootLoadingLayer, LoadingLayer) {
     if (!LoadingLayer::init(fromReload))
       return false;
     // Disabled VSync to uncap loading times, but removed the 0.0f FPS trap
+#ifdef GEODE_IS_WINDOWS
     CCApplication::sharedApplication()->toggleVerticalSync(false);
+#endif
     if (g_disableLoadingScreen) {
       this->setVisible(false);
     }
@@ -203,8 +209,11 @@ class $modify(FastBootMenuLayer, MenuLayer) {
     }
 
     auto gm = GameManager::sharedState();
-    if (gm->getGameVariable("0030"))
+    if (gm->getGameVariable("0030")) {
+#ifdef GEODE_IS_WINDOWS
       CCApplication::sharedApplication()->toggleVerticalSync(true);
+#endif
+    }
     float targetFPS =
         gm->m_customFPSTarget == 0 ? 60.0f : gm->m_customFPSTarget;
     CCDirector::sharedDirector()->setAnimationInterval(1.0f / targetFPS);
