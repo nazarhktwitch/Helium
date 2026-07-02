@@ -21,6 +21,16 @@
             "type": "bool",
             "default": false,
             "name": "Enable High Process Priority"
+        },
+        "enable-offscreen-culling": {
+            "type": "bool",
+            "default": true,
+            "name": "Enable Offscreen Culling"
+        },
+        "disable-loading-screen": {
+            "type": "bool",
+            "default": true,
+            "name": "Disable Loading Screen"
         }
     }
 }
