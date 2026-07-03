@@ -43,6 +43,7 @@ jobs:
         with:
           combine: true
           target: ${{ matrix.config.target }}
+          build-config: Release
 
   package:
     name: Package builds
